@@ -1,0 +1,20 @@
+plot4.data <- read.table("household_power_consumption.txt", sep = ";", header=TRUE)
+plot4.sub <- subset(plot4.data, plot4.data$Date == "1/2/2007" | plot4.data$Date == "2/2/2007")
+
+plot4.sub$Date <- as.Date(plot4.sub$Date, format="%d/%m/%Y")
+plot4.sub$Time <- strptime(plot4.sub$Time, "%H:%M:%S")
+plot4.sub[1:1440,"Time"] <- format(plot4.sub[1:1440,"Time"],"2007-02-01 %H:%M:%S")
+plot4.sub[1441:2880,"Time"] <- format(plot4.sub[1441:2880,"Time"],"2007-02-02 %H:%M:%S")
+
+png(filename = "plot4.png")
+par(mfrow = c(2,2))
+plot(plot4.sub$Time, plot4.sub$Global_active_power, type="l", xlab="", ylab="Global Active Power")
+plot(plot4.sub$Time, plot4.sub$Voltage, type = "l", xlab="datetime", ylab="Voltage")
+plot(plot3.sub$Time, plot3.sub$Sub_metering_1, type="l", xlab="", ylab="Energy sub metering")
+lines(plot3.sub$Time, plot3.sub$Sub_metering_2, col="red")
+lines(plot3.sub$Time, plot3.sub$Sub_metering_3, col="blue")
+legend("topright", lty=1, col=c("black", "red", "blue"), 
+       legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+plot(plot4.sub$Time, plot4.sub$Global_reactive_power, type = "l", xlab="datetime", ylab = "Global_reactive_power")
+dev.off()
+par(mfrow = c(1,1))
